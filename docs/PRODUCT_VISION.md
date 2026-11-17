@@ -1,40 +1,50 @@
 # Boomify Studio — Vision produit
 
-## Mission
-Rendre possible la creation musicale complete, de l'apprentissage des bases a une production approfondie, avec un outil accessible aux debutants sans brider les utilisateurs avances.
+## Mission validee
+Permettre de **produire un morceau complet de A a Z directement sur le Web**, aussi bien lors d'une premiere session MAO qu'avec une pratique avancee. Boomify doit etre un veritable DAW, pas un simple sequencer ni une demo. Une version Windows reste une possibilite future si les limites concretes du navigateur la rendent necessaire, **pas un prealable**.
 
-Boomify est un veritable DAW, pas uniquement une boite a rythmes ni un demonstrateur. Il doit permettre de produire, arranger, mixer et exporter des morceaux originaux. Il a une sensibilite electronique (acid, trance, harder styles), mais n'enferme pas l'utilisateur dans un genre.
+La production electronique et les harder styles (hard techno, hardcore, acid, hardstyle, trance...) sont une inspiration forte, **sans limiter Boomify a ces genres**. D'autres styles doivent rester pleinement possibles.
+
+## Decisions artistiques et ergonomiques (validees)
+- **Identite visuelle** : interface sombre, professionnelle, lisible, industrielle et epuree ; les premieres pistes evoquent favorablement Cakewalk. La DA visuelle peut evoluer en respectant cette direction.
+- **Signature/slogan** : **non defini** ; sera imagine et choisi plus tard par le createur. Ne pas figer de tagline dans le produit.
+- **Disposition principale** :
+  - barre de transport en haut ;
+  - **arrangement et timeline prioritaires**, occupant autant que possible toute la largeur de la zone superieure ;
+  - **explorateur sous forme de menu / tiroir escamotable**, et non une fenetre ou colonne permanente volant de la place a l'arrangement ; acces aux instruments, effets, samples, plugins et projets ;
+  - **piano roll et autres editeurs dans un panneau inferieur** ouvrable, redimensionnable et refermable ; edition contextuelle du clip selectionne.
+- **Une seule experience du debutant au professionnel** : aide contextuelle et tutoriels, jamais de capacites volontairement bridees ; controles avances disponibles au besoin.
+- **Bibliotheque integree evolutive** : instruments et effets propres a Boomify fournis par defaut, avec presets ; le catalogue pourra grandir. Support de plugins Web tiers compatible et securise a etudier ensuite.
+- **Web-first** : la version de production ciblee est la page Web ; pas de dependance a un EXE ni a un serveur applicatif pour composer et exporter.
 
 ## Principes non negociables
-1. **Accessible, mais pas simpliste** — aide contextuelle, vocabulaire explique, projet de demonstration, parcours pedagogique progressif et controles avances accessibles sans changer de logiciel.
-2. **Produire avant de configurer** — une premiere session doit permettre de creer un rythme, une basse, une melodie et un arrangement sans installation complexe.
-3. **Un projet reste editable** — notes, clips, pistes, effets, automations, presets et sources audio sont sauvegardables, recuperables et exportables.
-4. **Fiabilite audio en priorite** — lecture stable, synchronisation, absence de notes bloquees, gestion du transport, recuperation des erreurs, undo/redo et sauvegardes fiables.
-5. **Ouverture** — instruments et effets integres, puis plugins web tiers ; envisager une edition native pour les formats VST3/CLAP, sans promettre leur chargement dans Chrome.
-6. **Controle de l'utilisateur** — les projets personnels et les samples restent locaux par defaut. Aucun besoin de compte pour composer.
-7. **Performance** — separer la vue du moteur audio, preparer le traitement AudioWorklet et limiter les traitements sur le thread de l'interface.
+1. **Accessible, mais pas simpliste** — aide contextuelle, vocabulaire explique, demo, parcours pedagogique et outils experts accessibles sans changer de logiciel.
+2. **Produire avant de configurer** — creer kick, basse, melodie et arrangement des la premiere session.
+3. **Un projet reste editable** — notes, clips, pistes, effets, automations, presets et sources sont sauvegardables, recuperables et exportables.
+4. **Fiabilite audio** — lecture stable, synchronisation, gestion du transport, undo/redo et sauvegardes fiables avant l'accumulation de fonctions.
+5. **Ouverture** — plugins internes modulaires et extensibles, puis eventuellement WAM2 ; VST3/CLAP natifs uniquement via un futur hote natif.
+6. **Donnees personnelles locales** — samples et projets restent sur l'ordinateur par defaut. Aucun compte obligatoire.
+7. **Performance** — separer interface, scheduling et traitement audio (Web Audio, AudioWorklet pour les besoins adaptes).
 
 ## Parcours debutant
-- Demarrage guide : creer un kick, ajouter un pattern, composer une basse, ajouter une melodie, structurer un morceau, exporter un WAV.
-- Mini-explications dans le contexte d'utilisation : BPM, mesures, quantification, enveloppe, filtre, EQ, compression, sidechain.
-- Parametres utiles par defaut, presets et exemples de projets ; toutes les aides sont desactivables.
-- Retours visuels/audio clairs et corrections faciles.
+- Demarrage guide : creer un kick, construire un pattern, composer une basse, une melodie, structurer un morceau, exporter un WAV.
+- Explications integrees : BPM, mesures, quantification, enveloppes, filtres, EQ, compression et sidechain.
+- Bons parametres initiaux, presets, exemples, aides desactivables ; erreurs reparables.
 
-## Attentes utilisateurs avances
-- Edition precise des notes et clips ; raccourcis clavier ; zoom et navigation efficaces.
-- Routage audio clair, mixer, effets chainables, automation, metronome, boucle, import de samples, MIDI.
-- Formats de projet versionnes et portables ; sauvegarde automatique et export fiable.
-- Extensibilite par un systeme de plugins avec etat et presets serialisables.
+## Capacites visees pour utilisateurs avances
+- Piano roll et clips precis, timeline extensible et zoomable, raccourcis, navigation efficace.
+- Routage, mixer, effets chainables, automation, MIDI, import et export de samples, formats de projet versionnes.
+- Plugin API interne independante de l'interface, sauvegarde des etats/presets et compatibilite progressive.
+- Capacite a produire au-dela d'un simple loop, jusqu'a un morceau entier.
 
-## Priorites par etapes (sans date artificielle)
-1. **V2 : base d'arrangement** — clips editables, note-editor fiable, timeline extensible, undo/redo, tests de regression.
-2. **Fondations moteur** — transport et scheduling robustes, separation UI/audio, serialization stable, gestion des sources, sauvegarde et recuperation.
-3. **Production et apprentissage** — instruments, effets, automation, mixer, onboarding et tutoriels.
-4. **Plugins Web** — architecture de slots/inserts ; essai d'hebergement WAM 2.0 et validation de projets.
-5. **Evaluation edition native** — recherche d'un hote de plugins natifs (VST3/CLAP) sous Windows, necessitant un moteur/bridge natif et des tests de securite, de compatibilite et de latence.
+## Etapes de livraison (sans dates artificielles)
+1. **V2 — edition et arrangement** : double-clic pour ouvrir un clip ; piano roll inferieur et editions persistantes ; timeline plus vaste et mieux manipulable ; explorateur escamotable ; controles de regression.
+2. **Fondations moteur et projets** : transport/scheduling robuste, architecture modulaire, serialization, gestion des sources, sauvegarde/recuperation et undo/redo.
+3. **Creation musicale et pedagogie** : sampler, synthese et effets natifs pertinents, bibliotheque de presets, mixer, automation et tutoriels.
+4. **Extensions Web** : slots et routage de plugins, etude WAM2 et compatibilite de projets.
+5. **Evaluation Windows uniquement si besoin** : reutiliser l'interface HTML dans une application avec fonctions natives ; hebergement VST3/CLAP exigeant un hote natif specifique et une validation technique.
 
-## Methode de livraison
-- `main` = version publique stable publiee sur GitHub Pages.
-- Branches courtes `feature/*` ou `fix/*` ; tests et revue avant fusion.
-- Ne pas casser une fonctionnalite stable pour ajouter une nouvelle option.
-- Les fonctionnalites annoncees doivent avoir ete testees ; documenter explicitement les limitations.
+## Workflow
+- `main` reste la V1/Vx **publique stable** sur GitHub Pages.
+- Branches `feature/*` et `fix/*` ; tests et revue avant fusion.
+- Ne pas casser une version fonctionnelle ; annoncer uniquement ce qui a ete effectivement teste.
