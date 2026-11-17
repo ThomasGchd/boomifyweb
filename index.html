@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BOOMIFY // Browser Studio</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="top">
+ <div class="logo"><div class="brand-icon">B</div><div class="brand"><strong>BOOMIFY <span style="color:#ac91f4">STUDIO</span></strong><small>BROWSER EDITION • BÊTA 1.0</small></div></div>
+ <div class="transport"><button class="primary play" id="playBtn" title="Lecture / arrêt (Espace)">▶ LIRE</button><button id="stopBtn" title="Stop">■</button><button id="loopBtn" class="is-on" title="Boucle activée">↻</button><span class="counter" id="counter">01:1</span><button id="metroBtn" title="Métronome">♩</button></div>
+ <div class="top-group"><label for="bpm">BPM</label><input id="bpm" class="field" type="number" min="50" max="240" step="1" value="150"/><label for="bars">MESURES</label><select id="bars"><option>8</option><option>16</option><option>32</option></select></div>
+ <div class="top-actions"><input id="projectName" class="field" type="text" value="Mon premier track" aria-label="Nom du projet"/><button class="btn" id="saveBtn" title="Enregistrer un fichier projet JSON">⇩ Projet</button><button class="btn" id="loadBtn" title="Ouvrir un projet JSON">⇧ Ouvrir</button><button class="btn accent" id="exportBtn" title="Exporter un morceau au format WAV">♫ Export WAV</button><button class="btn small" id="newBtn" title="Repartir de zéro">Nouveau</button></div>
+</header>
+<div class="status"><div><strong id="engineStatus">● PRÊT</strong> &nbsp; <span id="statusText">Démo préchargée. Clique sur ▶ LIRE pour entendre le projet.</span></div><div class="meter"><span>MASTER</span><div class="meter-bars"><div id="meterFill"></div></div><input id="masterVol" type="range" min="0" max="100" value="78" style="width:74px;accent-color:#b6a3ff" aria-label="Volume master"/></div></div>
+<main class="main">
+ <section class="section"><div class="section-head"><div><h2>01 / Arrangement <span class="sub">Clique sur une mesure vide pour ajouter un clip • glisse un clip pour le déplacer</span></h2></div><div class="right-actions"><button class="btn small" id="addDrum">+ Drums</button><button class="btn small" id="addSynth">+ Synthé</button><button class="btn small" id="addAudio">+ Audio</button></div></div><div class="scroll-arr" id="scrollArr"><div class="timeline" id="timeline"></div></div><div class="hint">Clique sur un clip pour l'éditer en dessous. <b>Double-clique</b> pour dupliquer dans la mesure suivante. <b>Suppr</b> efface le clip sélectionné. Glisse un fichier audio sur une piste audio pour l'importer.</div></section>
+ <section class="section"><div class="section-head"><div><h2>02 / Éditeur <span class="sub" id="editorSubtitle">Piano roll & step sequencer</span></h2></div><div class="right-actions"><button class="btn small" id="duplicateClip">⧉ Dupliquer →</button><button class="btn small" id="clearClip">Vider</button><button class="btn small danger" id="deleteClip">✕ Clip</button></div></div><div id="editor"></div><div id="fxStrip" class="fx-strip"></div></section>
+ <footer class="bottom"><span><span class="kbd">Espace</span> Lire/arrêter &nbsp; <span class="kbd">Suppr</span> Effacer clip &nbsp; <span class="kbd">Ctrl+S</span> Sauver &nbsp; <span class="kbd">Clic droit</span> Retirer une note</span><span>100% local dans ton navigateur • Web Audio API • aucun serveur</span></footer>
+</main>
+<input id="projectFile" type="file" accept=".json,application/json" hidden/><input id="audioFile" type="file" accept="audio/*,.wav,.mp3,.ogg,.flac,.m4a" hidden/>
+<div id="toast" class="toast" role="status" aria-live="polite"></div><div class="loader" id="loader"><div class="spinner"></div><div id="loaderText">Export en cours...</div></div>
+<div class="modal-overlay" id="newModal"><div class="modal"><h3>Nouveau projet</h3><p>Tu veux effacer les clips actuels et repartir sur un projet vide ? Pense à exporter ton projet si tu veux le conserver.</p><div class="modal-actions"><button class="btn" id="cancelNew">Annuler</button><button class="btn danger" id="confirmNew">Oui, nouveau projet</button></div></div></div>
+<script src="./app.js"></script>
+</body>
+</html>
