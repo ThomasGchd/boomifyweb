@@ -1,38 +1,34 @@
-# Boomify Studio — Strategie plugins
+# Boomify Studio — Strategie instruments, effets et plugins
 
-## Objectif
-Permettre a l'utilisateur d'ajouter ses propres instruments et effets au lieu d'exiger qu'ils soient tous integres dans Boomify. Ne pas confondre plugins Web et VST natifs.
+## Cap fixe
+**Le Web est la plateforme principale de creation**, pas un compromis temporaire. Boomify doit permettre de composer et exporter une production complete sans installeur. L'ouverture aux plugins ne doit pas compromettre cet objectif.
 
-## Deux environnements, une experience utilisateur coherente
+## Trois niveaux d'extensibilite
+1. **Instruments et effets natifs Boomify** : bibliotheque initiale suffisamment fournie, evolutive, maintenue dans le projet ; presets et interfaces coherentes ; modules charges a la demande ; offrir notamment de quoi produire acid, hard techno, hardcore, trance, mais sans exclusivite musicale.
+2. **Extensions compatibles Web** : etudier Web Audio Modules 2.0 (WAM2) pour des plugins tiers compatibles avec un hote Web. Compatibilite, droits de redistribution, dependances, performances et securite doivent etre testes. L'execution de JavaScript arbitraire a partir de liens ou de fichiers non verifies n'est pas autorisee par defaut.
+3. **Hypothese Windows ulterieure seulement si necessaire** : une interface HTML/CSS/JS pourrait etre integree dans une application desktop, avec un pont / hote natif pour VST3 ou CLAP, mais un simple emballage EXE ne rend pas ces plugins compatibles.
 
-### 1. Boomify Web (GitHub Pages)
-- Web Audio API et, pour le DSP avance, AudioWorklet.
-- Etudier **Web Audio Modules 2.0 (WAM2)** comme interface de plugins Web, en premier lieu pour les effets, puis les instruments et les evenements MIDI.
-- Les plugins WAM distribuent un module JavaScript, des metadonnees et parfois des ressources WebAssembly. Ces ressources doivent etre chargeables par un hote Web compatible.
-- Ne pas promettre qu'un fichier `.dll` ou `.vst3` puisse etre depose sur une page et utilise directement.
-- L'import par URL ou paquet local exige une politique de confiance stricte : du JavaScript tiers peut etre dangereux. Preferer des plugins audites/autorises au debut, pas l'execution arbitraire de code.
-- Prevoir des interfaces `PluginRegistry`, `PluginInstance`, `PluginState`, `PluginSlot`, `AudioRouting`, independantes du framework UI.
+## Architecture cible (a construire progressivement)
+- Couche presentation : arrangement, piano roll, transport, mixer, menus d'explorateur escamotables.
+- Couche musicale : modeles de projets/pistes/clips/notes, tempo, scheduling, automation et sauvegardes.
+- Couche audio : noeuds Web Audio, synthese, effets, AudioWorklet si necessaire et rendu offline.
+- Couche plugins : contrats `PluginRegistry`, `PluginInstance`, `PluginState`, `PluginSlot`, `AudioRouting` independants de l'interface.
+- Charger les instruments/effets lourds **a la demande**, ne pas integrer des dizaines de moteurs inutilises dans le bundle initial.
 
-### 2. Edition Windows potentielle (plus tard)
-- Possibilite de reemployer l'interface Web dans un conteneur de bureau et de raccorder un moteur/hote de plugins natifs.
-- VST3/CLAP impliquent un hote natif, le scan des plugins, les architectures de processeur compatibles, l'isolation des crashs, la communication audio/MIDI et des tests de latence. Ce n'est pas resolu par GitHub Pages, PHP ou un simple serveur local.
-- Ne pas affirmer une compatibilite totale ; proceder par prototype technique avant de choisir Electron/Tauri, C++ ou Rust.
+## Plugins et projets
+- Sauvegarder fournisseur/type/identifiant/version, controles, etat et presets, routage et ressources necessaires.
+- Si un plugin manque : afficher une explication, garder son etat et proposer un remplacement, sans detruire le projet.
+- Projets et bibliotheques de samples locaux par defaut ; les projets doivent rester editables, exportables et recuperables.
 
-## Contrat de sauvegarde des projets
-- Stocker pour chaque plugin son type, fournisseur/identifiant, version, parametres, routage, preset/etat et references aux ressources.
-- Si un plugin manque, conserver sa configuration et prevenir l'utilisateur ; ne pas effacer les donnees de la session.
-- Les projets doivent rester portables et recuperables. Tester les migrations de format.
-- Les bibliotheques de samples et autres fichiers utilisateur restent locaux, sauf action explicite de partage.
+## Ordre raisonnable
+1. Clips editables, timeline, note editor et sauvegarde stables.
+2. Chaine audio/mixer et API de modules internes testable.
+3. Bibliotheque native Boomify avec synthese, sampler, effets et presets coherents.
+4. Test WAM2, restauration d'etat, puis exploration d'un catalogue tiers securise.
+5. Version desktop seulement en presence d'une limitation Web precise et documentee ; preuve de concept avant tout engagement.
 
-## Ordre d'implementation
-1. Stabiliser timeline, notes, moteur audio et serialisation.
-2. Mettre en place une chaine d'effets interne avec une interface de plugin abstraite.
-3. Valider un plugin WAM2 exemple, puis la sauvegarde/restauration de ses reglages.
-4. Ajouter un navigateur de plugins avec liste compatible, gestion des erreurs, activation/desactivation, presets et information de compatibilite.
-5. Evaluer une version desktop et le support natif VST3/CLAP apres preuve de concept.
-
-## References techniques
-- WAM2 introduction : https://www.webaudiomodules.com/docs/intro/
-- API WAM : https://github.com/webaudiomodules/api
+## References de travail
+- WAM2 : https://www.webaudiomodules.com/docs/intro/
+- WAM API : https://github.com/webaudiomodules/api
 - AudioWorklet : https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet
-- VST3 plugin format : https://steinbergmedia.github.io/vst3_dev_portal/pages/Technical%2BDocumentation/Locations%2BFormat/Plugin%2BFormat.html
+- VST3 : https://steinbergmedia.github.io/vst3_dev_portal/
