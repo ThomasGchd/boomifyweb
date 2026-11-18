@@ -47,3 +47,7 @@
 :root:fullscreen .scroll-arr{max-height:75dvh}
 :root:fullscreen .view-menu{z-index:60}
 @media(max-width:540px){.view-menu{right:-40px}.view-wrap{margin-left:0}}
+
+/* Persistent, visible warning for unsaved imported samples or storage errors. */
+.storage-warning{padding:10px 22px;background:#36232d;color:#ffced5;border-bottom:1px solid #8d4955;font-size:12px;line-height:1.5}
+.storage-warning[hidden]{display:none!important}
