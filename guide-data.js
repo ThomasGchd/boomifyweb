@@ -44,7 +44,7 @@
         {
           title:'Dessiner une première phrase',
           goal:'Composer quatre notes que tu pourras modifier librement.',
-          instruction:'Essaie par exemple C3, Eb3, G3 et Bb2, sur les pas 3, 7, 11 et 15 du piano roll (les pas sont numérotés de 1 à 16). Garde des notes courtes, puis écoute avec le kick.',
+          instruction:'Essaie par exemple C3, D#3, G3 et A#2, sur les cases 3, 7, 11 et 15 du piano roll (compte les 16 cases de gauche à droite). Garde des notes courtes, puis écoute avec le kick.',
           check:'Tu entends une phrase Acid rythmée, avec de l’espace entre les notes.',
           tip:'Ceci n’est qu’un exemple : remplace les hauteurs, ajoute des silences ou décale des notes pour trouver ton propre groove.',
           target:'#editorSection',action:'Aller au piano roll'
@@ -54,7 +54,7 @@
           goal:'Comprendre le timbre Acid au-delà de la suite de notes.',
           instruction:'Sélectionne la piste Acid. Dans les paramètres de la piste sous l’éditeur, expérimente progressivement avec Cutoff et Drive tout en écoutant. Change un paramètre à la fois.',
           check:'Tu identifies au moins un réglage qui change clairement le caractère du synthé.',
-          tip:'Le cutoff ouvre ou ferme les aigus ; la résonance donne le son « liquide ». L’automation de filtre sera une amélioration future.',
+          tip:'Le cutoff ouvre ou ferme les aigus ; la résonance donne le son « liquide ». Sur le preset actuel, elle n’est pas encore réglable séparément. L’automation de filtre viendra plus tard.',
           target:'#fxStrip',action:'Voir les réglages'
         },
         {
