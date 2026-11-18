@@ -12,7 +12,7 @@
 
 ## ÉTAPE 1 — Batterie de tests complète : validation V2
 
-**Objectif :** vérifier que Boomify est fiable pour commencer à créer. Statut au 18 novembre 2026 : **première campagne utilisateur réalisée, retests ciblés en attente**. Les scénarios lecture, édition, import WAV, autosave, export WAV et restauration JSON ont réussi sur le PC utilisateur ; le métronome était difficile à identifier et un clip nouvellement créé recopiait involontairement le précédent. Deux correctifs ont été intégrés sur la branche de développement et attendent vérification. Les points de confort non bloquants sont consignés dans l’issue #4. On reste à l'étape 1 jusqu'à validation.
+**Objectif :** vérifier que Boomify est fiable pour commencer à créer. Statut au 18 novembre 2026 : **ÉTAPE 1 VALIDÉE par l'utilisateur**. Les dix parcours de la campagne de tests ont été exécutés sur son PC : lecture (boucle et unique), piano roll, Vider/Annuler, clips et arrangement, ergonomie, import WAV, sauvegarde automatique, export WAV audible et restauration JSON. Les deux corrections issues des retours ont ensuite été retestées avec succès : métronome visible et fonctionnel ; création de clips vides et duplication fonctionnelles. Les améliorations non bloquantes (navigation, mise en page, choix d'instrument, waveform, plage d'export) restent tracées dans l’issue #4. **Porte de validation franchie : passage à l'étape 2 (composition Acid).**
 
 ### Tests à dérouler, dans l'ordre
 1. **Lancement & interface :** ouvrir la V2 sur `http://127.0.0.1` (ou autre origine de test dédiée), vérifier l'absence d'erreur visible et les notes préchargées.
