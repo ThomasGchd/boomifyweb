@@ -1,0 +1,9 @@
+{
+  "name": "boomify-studio",
+  "private": true,
+  "version": "0.2.0-dev",
+  "description": "DAW web local, sans dépendances d'exécution",
+  "scripts": {
+    "test": "node --check app.js && node --check clip-operations.js && node --check storage.js && node --test tests/*.test.cjs"
+  }
+}
