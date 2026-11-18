@@ -104,12 +104,44 @@ $('#playBtn').addEventListener('click',()=>playing?stop():start());$('#stopBtn')
 $('#bpm').addEventListener('change',e=>{let n=Math.max(50,Math.min(240,Math.round(+e.target.value||150)));if(n===project.bpm){e.target.value=n;return;}if(playing)stop();project.bpm=n;e.target.value=n;renderAll();markChange();});$('#bars').addEventListener('change',e=>{const n=+e.target.value;if(n===project.bars)return;if(n<project.bars&&project.tracks.some(t=>t.clips.some(c=>c.start+c.bars>n))&&!confirm('Réduire l’arrangement supprimera ou raccourcira certains clips. Continuer ?')){e.target.value=project.bars;return;}if(playing)stop();project.bars=n;for(const t of project.tracks)t.clips=t.clips.filter(c=>c.start<n).map(c=>({...c,bars:Math.min(c.bars,n-c.start)}));if(!selectedClip())selection.clipId=null;renderAll();markChange();});$('#projectName').addEventListener('input',e=>{project.name=e.target.value;markChange('project-name');});$('#masterVol').addEventListener('input',e=>{project.master=+e.target.value/100;if(liveNetwork)liveNetwork.master.gain.value=project.master;markChange('master-volume');});
 $('#saveBtn').addEventListener('click',()=>{download(slug(project.name)+'.boomify.json',JSON.stringify(serialize(true),null,2),'application/json');projectModified=false;toast('Projet enregistré (avec les samples).');});$('#loadBtn').addEventListener('click',()=>$('#projectFile').click());$('#projectFile').addEventListener('change',e=>openProject(e.target.files[0]));$('#exportBtn').addEventListener('click',saveWav);$('#newBtn').addEventListener('click',()=>$('#newModal').style.display='flex');$('#cancelNew').addEventListener('click',()=>$('#newModal').style.display='none');$('#confirmNew').addEventListener('click',()=>{$('#newModal').style.display='none';emptyProject();});$('#newModal').addEventListener('click',e=>{if(e.target.id==='newModal')e.currentTarget.style.display='none';});
 
+const VIEW_PREFS_KEY='boomify-ui-prefs-v1';
+const DEFAULT_VIEW={scale:100,compact:false,timelineZoom:120,editorVisible:true};
+let viewPrefs={...DEFAULT_VIEW};
+try{const saved=JSON.parse(localStorage.getItem(VIEW_PREFS_KEY)||'null');if(saved&&typeof saved==='object')viewPrefs={...viewPrefs,...saved};}catch(_){}
+function storeViewPrefs(){try{localStorage.setItem(VIEW_PREFS_KEY,JSON.stringify(viewPrefs));}catch(_){}}
+function setViewMenu(open){$('#viewMenu').hidden=!open;$('#viewBtn').setAttribute('aria-expanded',String(open));if(open)setLibraryVisible(false);}
+function applyViewPrefs(){
+ const scale=[80,90,100,110,125].includes(+viewPrefs.scale)?+viewPrefs.scale:100;
+ viewPrefs.scale=scale;
+ document.body.style.zoom=String(scale/100);
+ $('#uiScale').value=String(scale);
+ const compact=!!viewPrefs.compact;document.body.classList.toggle('compact-view',compact);
+ $('#compactBtn').setAttribute('aria-pressed',String(compact));
+ $('#compactBtn').textContent=compact?'◧ Mode compact : activé':'◫ Mode compact : désactivé';
+ const timelineZoom=Math.min(220,Math.max(80,Number(viewPrefs.timelineZoom)||120));
+ viewPrefs.timelineZoom=timelineZoom;$('#timelineZoom').value=String(timelineZoom);
+ document.documentElement.style.setProperty('--barw',timelineZoom+'px');
+ setEditorVisible(viewPrefs.editorVisible!==false);
+}
+function restoreDefaultView(){viewPrefs={...DEFAULT_VIEW};applyViewPrefs();storeViewPrefs();toast('Affichage réinitialisé.');}
+function syncFullscreenControl(){const active=!!document.fullscreenElement;$('#fullscreenBtn').setAttribute('aria-pressed',String(active));$('#fullscreenBtn').textContent=active?'⤢ Quitter le plein écran':'⛶ Plein écran';document.body.classList.toggle('fullscreen-view',active);}
+async function toggleFullscreen(){
+ try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else toast('Plein écran non disponible dans ce navigateur.');}
+ catch(_){toast('Plein écran refusé. Essaie depuis le site en HTTPS.');}
+}
+$('#viewBtn').addEventListener('click',()=>setViewMenu($('#viewMenu').hidden));
+$('#uiScale').addEventListener('change',e=>{viewPrefs.scale=Number(e.target.value);applyViewPrefs();storeViewPrefs();});
+$('#compactBtn').addEventListener('click',()=>{viewPrefs.compact=!viewPrefs.compact;applyViewPrefs();storeViewPrefs();});
+$('#resetViewBtn').addEventListener('click',restoreDefaultView);
+$('#fullscreenBtn').addEventListener('click',toggleFullscreen);
+document.addEventListener('fullscreenchange',syncFullscreenControl);
+document.addEventListener('click',e=>{if(!e.target.closest('.view-wrap'))setViewMenu(false);});
 function setLibraryVisible(open){const menu=$('#libraryMenu');menu.hidden=!open;$('#libraryBtn').setAttribute('aria-expanded',String(open));}
 function setEditorVisible(open){editorVisible=open;$('#editorWorkspace').hidden=!open;$('#toggleEditor').textContent=open?'Masquer l’éditeur':'Afficher l’éditeur';$('#toggleEditor').setAttribute('aria-expanded',String(open));}
 $('#libraryBtn').addEventListener('click',()=>setLibraryVisible($('#libraryMenu').hidden));
 document.addEventListener('click',e=>{if(!e.target.closest('.library-wrap'))setLibraryVisible(false);});
-$('#toggleEditor').addEventListener('click',()=>setEditorVisible(!editorVisible));
-$('#timelineZoom').addEventListener('input',e=>document.documentElement.style.setProperty('--barw',`${e.target.value}px`));
+$('#toggleEditor').addEventListener('click',()=>{setEditorVisible(!editorVisible);viewPrefs.editorVisible=editorVisible;storeViewPrefs();});
+$('#timelineZoom').addEventListener('input',e=>{viewPrefs.timelineZoom=+e.target.value;document.documentElement.style.setProperty('--barw',`${viewPrefs.timelineZoom}px`);storeViewPrefs();});
 $('#addDrum').addEventListener('click',()=>addTrack('drum'));$('#addSynth').addEventListener('click',()=>addTrack('synth'));$('#addAudio').addEventListener('click',()=>addTrack('audio'));$('#libraryMenu').addEventListener('click',e=>{if(e.target.closest('#addDrum,#addSynth,#addAudio'))setLibraryVisible(false);});$('#duplicateClip').addEventListener('click',duplicateSelected);$('#deleteClip').addEventListener('click',deleteSelected);$('#clearClip').addEventListener('click',clearSelected);
 $('#timeline').addEventListener('click',e=>{let target=e.target;const mute=target.closest('[data-mute]'),solo=target.closest('[data-solo]'),sel=target.closest('[data-selecttrack]');if(mute||solo){let t=trackById((mute||solo).dataset[mute?'mute':'solo']);if(!t)return;if(mute)t.mute=!t.mute;else t.solo=!t.solo;syncNetwork();renderTimeline();markChange();return;}if(sel){let t=trackById(sel.dataset.selecttrack);selection={trackId:t.id,clipId:t.clips[0]?.id||null};renderAll();return;}if(target.closest('input'))return;let clip=target.closest('.clip');if(clip){selectClip(clip.dataset.track,clip.dataset.clip);return;}let lane=target.closest('.track-lane');if(lane){let t=trackById(lane.dataset.lane);let bar=getLaneBar(lane,e.clientX);if(!t)return;let existing=t.clips.find(c=>bar>=c.start&&bar<c.start+c.bars);if(existing){selectClip(t.id,existing.id);return;}let prior=t.clips.filter(c=>c.start<bar).sort((a,b)=>b.start-a.start)[0],c=addClip(t,bar,t.type==='audio'?null:prior);if(c)selectClip(t.id,c.id);}});
 $('#timeline').addEventListener('dblclick',e=>{const clip=e.target.closest('.clip');if(!clip)return;selectClip(clip.dataset.track,clip.dataset.clip);setEditorVisible(true);$('#editorSection').scrollIntoView({behavior:'smooth',block:'nearest'});toast('Clip ouvert dans l’éditeur.');});
@@ -159,7 +191,7 @@ $('#audioFile').addEventListener('change',e=>useAudioFile(e.target.files[0],load
 function syncNetwork(){if(!liveNetwork)return;const anySolo=project.tracks.some(t=>t.solo);for(let t of project.tracks){let n=liveNetwork.nodes.get(t.id);if(n){n.gain.gain.value=t.mute||(anySolo&&!t.solo)?0:t.vol;n.pan.pan.value=t.pan;n.filter.frequency.value=t.cutoff;n.shaper.curve=makeDistortion(t.drive);}}}
 $('#fxStrip').addEventListener('input',e=>{let t=selectedTrack();if(!t)return;const {id,value}=e.target;if(id==='fxVolume'){t.vol=+value/100;$('#fxVolumeVal').textContent=value+'%';const v=document.querySelector(`[data-vol="${t.id}"]`);if(v)v.value=value;}else if(id==='fxPan'){t.pan=+value/100;$('#fxPanVal').textContent=value;}else if(id==='fxCutoff'){t.cutoff=Math.round(120*(20000/120)**(+value/100));$('#fxCutoffVal').textContent=t.cutoff+' Hz';}else if(id==='fxDrive'){t.drive=+value;$('#fxDriveVal').textContent=value+'%';}syncNetwork();markChange('fx-'+t.id+'-'+id);});
 $('#fxStrip').addEventListener('click',e=>{if(e.target.id==='removeTrack'){let t=selectedTrack();if(!t||!confirm('Supprimer la piste « '+t.name+' » ?'))return;stop();project.tracks=project.tracks.filter(x=>x.id!==t.id);selection={trackId:project.tracks[0]?.id||null,clipId:project.tracks[0]?.clips[0]?.id||null};renderAll();markChange();}});
-window.addEventListener('keydown',e=>{if(e.key==='Escape'){setLibraryVisible(false);return;}const tag=e.target.tagName.toLowerCase();const inField=['input','textarea','select'].includes(tag);if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();$('#saveBtn').click();return;}if(inField)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redoEdit():undoEdit();return;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redoEdit();return;}if(e.code==='Space'){e.preventDefault();playing?stop():start();}if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();deleteSelected();}});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){setLibraryVisible(false);setViewMenu(false);return;}const tag=e.target.tagName.toLowerCase();const inField=['input','textarea','select'].includes(tag);if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();$('#saveBtn').click();return;}if(inField)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redoEdit():undoEdit();return;}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();redoEdit();return;}if(e.code==='Space'){e.preventDefault();playing?stop():start();}if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();deleteSelected();}});
 window.addEventListener('beforeunload',e=>{if(projectModified&&project.tracks.some(t=>t.type==='audio'&&t.buffer)){e.preventDefault();e.returnValue='';}});
-if(!autosaveRestore())demo();syncHeader();renderAll();historyPresent=historySnapshot();historyControls();
+if(!autosaveRestore())demo();syncHeader();renderAll();applyViewPrefs();syncFullscreenControl();historyPresent=historySnapshot();historyControls();
 })();
