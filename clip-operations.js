@@ -38,7 +38,7 @@
       copy.start = start + item.offset;
       if (!Number.isInteger(copy.bars) || copy.bars < 1 || copy.start + copy.bars > totalBars) return {ok:false, reason:'Le collage dépasse la dernière mesure du projet.'};
       if ((track.clips || []).some(existing => copy.start < existing.start+existing.bars && copy.start+copy.bars > existing.start)) return {ok:false, reason:'Collage impossible : une des cases de destination est déjà occupée.'};
-      if (insertions.some(other => other.trackId === track.id && copy.start < other.clip.start+other.clip.bars && copy.start+copy.clip.bars > other.clip.start)) return {ok:false, reason:'Les clips copiés se chevauchent.'};
+      if (insertions.some(other => other.trackId === track.id && copy.start < other.clip.start+other.clip.bars && copy.start+copy.bars > other.clip.start)) return {ok:false, reason:'Les clips copiés se chevauchent.'};
       insertions.push({trackId:track.id, clip:copy});
     }
     return {ok:true, insertions};
