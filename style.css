@@ -51,3 +51,7 @@
 /* Persistent, visible warning for unsaved imported samples or storage errors. */
 .storage-warning{padding:10px 22px;background:#36232d;color:#ffced5;border-bottom:1px solid #8d4955;font-size:12px;line-height:1.5}
 .storage-warning[hidden]{display:none!important}
+
+/* Review R1: metronome clearly identified without sacrificing keyboard access. */
+.transport .metro-btn{width:auto;min-width:98px;padding:0 10px;white-space:nowrap}
+@media(max-width:540px){.transport .metro-btn{min-width:0;padding:0 7px}}
