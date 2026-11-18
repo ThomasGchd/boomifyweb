@@ -55,3 +55,11 @@
 /* Review R1: metronome clearly identified without sacrificing keyboard access. */
 .transport .metro-btn{width:auto;min-width:98px;padding:0 10px;white-space:nowrap}
 @media(max-width:540px){.transport .metro-btn{min-width:0;padding:0 7px}}
+
+/* Multi-clip arrangement selection and deliberate copy/paste destination. */
+.selection-count{display:inline-block;margin-top:6px;padding:3px 8px;color:#e0d3ff;background:#46365a;border:1px solid #846ca5;border-radius:16px;font-size:11px}
+.selection-count[hidden]{display:none!important}
+.btn.paste-active{border-color:#8ceac1;background:#234c41;color:#d2ffe9;box-shadow:0 0 0 1px #78cfa777}
+.paste-mode .track-lane{cursor:copy}
+.paste-mode .track-lane .clip{cursor:copy}
+.clip.selected{outline:3px solid #e8dcff;outline-offset:-3px;box-shadow:0 0 0 3px #d4b9ff66,0 4px 16px #0007;z-index:4}
